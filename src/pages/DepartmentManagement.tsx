@@ -2,6 +2,7 @@ import { useState } from "react";
 import { FaTrash, FaPlus, FaSearch, FaPen } from "react-icons/fa";
 import { BiSolidCarousel } from "react-icons/bi";
 import { IoFilterSharp } from "react-icons/io5";
+import RoleModal from "./RoleModal";
 
 const departments = [
   { id: 1, name: "Phòng kinh doanh", count: 8 },
@@ -13,16 +14,20 @@ const roles = ["Trưởng phòng", "Phó phòng", "Nhân viên", "Phó Giám Đ�
 const rowsPerPageOptions = [5, 10, 15];
 
 const DepartmentManagement = () => {
+  const [isRoleModalOpen, setIsRoleModalOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const [rowsPerPage, setRowsPerPage] = useState(3); 
-  const [selectedRole, setSelectedRole] = useState<number | null>(null); 
+  const [rowsPerPage, setRowsPerPage] = useState(3);
+  const [selectedRole, setSelectedRole] = useState<number | null>(null);
 
   const totalPages = Math.ceil(departments.length / rowsPerPage);
   const startIndex = (currentPage - 1) * rowsPerPage;
-  const displayedDepartments = departments.slice(startIndex, startIndex + rowsPerPage);
+  const displayedDepartments = departments.slice(
+    startIndex,
+    startIndex + rowsPerPage
+  );
 
   const handleRoleClick = (index: number) => {
-    setSelectedRole(index === selectedRole ? null : index); 
+    setSelectedRole(index === selectedRole ? null : index);
   };
 
   return (
@@ -84,31 +89,58 @@ const DepartmentManagement = () => {
               </select>
             </div>
             <div className="page-controls">
-              <button onClick={() => setCurrentPage(1)} disabled={currentPage === 1}>
+              <button
+                onClick={() => setCurrentPage(1)}
+                disabled={currentPage === 1}
+              >
                 «
               </button>
-              <button onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))} disabled={currentPage === 1}>
+              <button
+                onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                disabled={currentPage === 1}
+              >
                 ‹
               </button>
               <span>
                 {currentPage} / {totalPages}
               </span>
-              <button onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))} disabled={currentPage === totalPages}>
+              <button
+                onClick={() =>
+                  setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+                }
+                disabled={currentPage === totalPages}
+              >
                 ›
               </button>
-              <button onClick={() => setCurrentPage(totalPages)} disabled={currentPage === totalPages}>
+              <button
+                onClick={() => setCurrentPage(totalPages)}
+                disabled={currentPage === totalPages}
+              >
                 »
               </button>
             </div>
           </div>
         </div>
         <div className="role-container">
-          <button className="create-role">+ Tạo chức vụ</button>
+          <button
+            className="create-role"
+            onClick={() => setIsRoleModalOpen(true)}
+          >
+            + Tạo chức vụ
+          </button>
+
           <ul>
             {roles.map((role, index) => (
               <li key={index}>
-                <button className="role-item" onClick={() => handleRoleClick(index)}>
-                  <span className={`dot ${selectedRole === index ? "inactive" : "active"}`}></span>
+                <button
+                  className="role-item"
+                  onClick={() => handleRoleClick(index)}
+                >
+                  <span
+                    className={`dot ${
+                      selectedRole === index ? "inactive" : "active"
+                    }`}
+                  ></span>
                   <span className="role-name">{role}</span>
                   <span className="remove">✖</span>
                 </button>
@@ -116,6 +148,10 @@ const DepartmentManagement = () => {
             ))}
           </ul>
         </div>
+        <RoleModal
+          isOpen={isRoleModalOpen}
+          onClose={() => setIsRoleModalOpen(false)}
+        />
       </div>
     </div>
   );
