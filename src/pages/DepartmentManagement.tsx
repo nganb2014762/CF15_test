@@ -6,6 +6,7 @@ import RoleModal from "./RoleModal";
 import Department from "./Department";
 import DepartmentUpdate from "./DepartmentUpdate";
 import DeleteConfirmModal from "./DepartmentDelete";
+import View from "./View";
 const departments = [
   { id: 1, name: "Phòng kinh doanh", count: 8 },
   { id: 2, name: "Phòng công nghệ", count: 4 },
@@ -20,10 +21,12 @@ const DepartmentManagement = () => {
   const [isDepartment, setIsDepartment] = useState(false);
   const [isDepartmentUpdate, setIsDepartmentUpdate] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isView, setIsView] = useState(false);
   const [selectedDepartment, setSelectedDepartment] = useState<string>("");
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(3);
   const [selectedRole, setSelectedRole] = useState<number | null>(null);
+  const [viewDepartment, setViewDepartment] = useState<string | null>(null);
 
   const totalPages = Math.ceil(departments.length / rowsPerPage);
   const startIndex = (currentPage - 1) * rowsPerPage;
@@ -79,7 +82,14 @@ const DepartmentManagement = () => {
                   <td>{dept.name}</td>
                   <td>{dept.count}</td>
                   <td className="actions">
-                    <BiSolidCarousel className="status-icon" />
+                    <BiSolidCarousel
+                      className="status-icon"
+                      onClick={() => {
+                        setViewDepartment(dept.name);
+                        setIsView(true);
+                      }}
+                    />
+
                     <FaPen
                       className="edit-icon"
                       onClick={() => setIsDepartmentUpdate(true)}
@@ -190,6 +200,15 @@ const DepartmentManagement = () => {
           onClose={() => setIsDeleteModalOpen(false)}
           onConfirm={handleConfirmDelete}
           departmentName={selectedDepartment}
+        />
+
+        <View
+          isOpen={isView}
+          departmentName={viewDepartment}
+          onClose={() => {
+            setIsView(false);
+            setViewDepartment(null);
+          }}
         />
       </div>
     </div>
