@@ -3,7 +3,7 @@ import { FaTrash, FaPlus, FaSearch, FaPen } from "react-icons/fa";
 import { BiSolidCarousel } from "react-icons/bi";
 import { IoFilterSharp } from "react-icons/io5";
 import RoleModal from "./RoleModal";
-
+import Department from "./Department";
 const departments = [
   { id: 1, name: "Phòng kinh doanh", count: 8 },
   { id: 2, name: "Phòng công nghệ", count: 4 },
@@ -15,6 +15,7 @@ const rowsPerPageOptions = [5, 10, 15];
 
 const DepartmentManagement = () => {
   const [isRoleModalOpen, setIsRoleModalOpen] = useState(false);
+  const [isDepartment, setIsDepartment] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(3);
   const [selectedRole, setSelectedRole] = useState<number | null>(null);
@@ -39,7 +40,7 @@ const DepartmentManagement = () => {
             <FaSearch className="search-icon" />
             <input type="text" placeholder="Tìm kiếm phòng ban..." />
           </div>
-          <button className="create-btn">
+          <button className="create-btn" onClick={() => setIsDepartment(true)}>
             <FaPlus /> Tạo mới
           </button>
         </div>
@@ -151,6 +152,11 @@ const DepartmentManagement = () => {
         <RoleModal
           isOpen={isRoleModalOpen}
           onClose={() => setIsRoleModalOpen(false)}
+        />
+
+        <Department
+          isOpen={isDepartment}
+          onClose={() => setIsDepartment(false)}
         />
       </div>
     </div>
