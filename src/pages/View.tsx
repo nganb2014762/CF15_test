@@ -1,4 +1,7 @@
+import { useState } from "react";
 import img from "../assets/images.jpg";
+import StaffModal from "./StaffModal";
+
 interface ViewProps {
   isOpen: boolean;
   onClose: () => void;
@@ -6,23 +9,59 @@ interface ViewProps {
 }
 
 const View: React.FC<ViewProps> = ({ isOpen, onClose, departmentName }) => {
+  const [isStaffModalOpen, setIsStaffModalOpen] = useState(false);
+  const [isButtonClicked, setIsButtonClicked] = useState(false);
+
+  const handleOpenStaffModal = () => {
+    setIsStaffModalOpen(true);
+    setIsButtonClicked(true);
+  };
+
+  const handleCloseStaffModal = () => {
+    setIsStaffModalOpen(false);
+    setTimeout(() => setIsButtonClicked(false), 300);
+  };
+
+  const handleClose = () => {
+    if (!isStaffModalOpen) {
+      onClose();
+    }
+  };
+
   return (
     <>
-      <div className={`overlay ${isOpen ? "show" : ""}`} onClick={onClose}></div>
+      <div
+        className={`overlay ${isOpen ? "show" : ""}`}
+        onClick={handleClose}
+      ></div>
 
-      <div className={`modal ${isOpen ? "open" : ""}`}>
+      <div
+        className={`modal view-modal ${isStaffModalOpen ? "shift-left" : ""} ${
+          isOpen ? "open" : ""
+        }`}
+      >
         <div className="modal-content">
           <div className="modal-header">
             <p className="modal-text">{departmentName}</p>
-            <button className="close-text" onClick={onClose}>Đóng lại</button>
+            <button className="close-text" onClick={handleClose}>
+              Đóng lại
+            </button>
           </div>
-          <div className="modal-body">
-          <img src={img} className="empty-image" alt="React Logo" />
-            <p style={{color:"black"}}>Không có nhân sự trong phòng này. Bạn muốn thêm nhân sự mới?</p>
-            <button className="add-staff-btn">+ Thêm nhân sự</button>
+          <div className="modal-body1">
+            <img src={img} className="empty-image" alt="React Logo" />
+            <p style={{ color: "black" }}>
+              Không có nhân sự trong phòng này. Bạn muốn thêm nhân sự mới?
+            </p>
+            <button
+              className={`add-staff-btn ${isButtonClicked ? "clicked" : ""}`}
+              onClick={handleOpenStaffModal}
+            >
+              + Thêm nhân sự
+            </button>
           </div>
         </div>
       </div>
+      <StaffModal isOpen={isStaffModalOpen} onClose={handleCloseStaffModal} />
     </>
   );
 };
